@@ -6,7 +6,7 @@
 #
 # opencv docker - https://github.com/Valian/docker-python-opencv-ffmpeg and https://github.com/Borda/docker_python-opencv-ffmpeg/blob/master/gpu/Dockerfile
 
-FROM    tigerdockermediocore/cuda-ffmpeg-docker:4.2.3-cu102
+FROM    tigerdockermediocore/cuda-ffmpeg-docker:4.2.2-cu90
 
 WORKDIR    /
 
@@ -112,7 +112,7 @@ RUN CUDA_PATH=(/usr/local/cuda-*) && \
       # https://stackoverflow.com/questions/28010399/build-opencv-with-cuda-support
       # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
       # https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications
-      -D CUDA_ARCH_BIN="3.0 3.5 3.7 5.0 5.2 6.0 6.1 7.0 7.5" \
+      -D CUDA_ARCH_BIN="3.0 3.5 3.7 5.0 5.2 6.0 6.1 7.0" \
       -D CUDA_ARCH_PTX="" \
       -D WITH_CUBLAS=ON \
       -D WITH_NVCUVID=ON \
