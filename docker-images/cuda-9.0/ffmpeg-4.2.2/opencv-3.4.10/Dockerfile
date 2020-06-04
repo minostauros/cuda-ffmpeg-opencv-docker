@@ -12,22 +12,23 @@ WORKDIR    /
 
 # Install OpenCV
 ARG PYTHON_VERSION=3.7
-ARG OPENCV_VERSION=4.3.0
+ARG OPENCV_VERSION=3.4.10
 
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
 
-# Add CUDA libs paths
-RUN CUDA_PATH=(/usr/local/cuda-*) && \
-    CUDA=`basename $CUDA_PATH` && \
-    echo "$CUDA_PATH/compat" >> /etc/ld.so.conf.d/${CUDA/./-}.conf && \
-    ldconfig && \
 # Install all dependencies for OpenCV
-    apt-get -y update -qq --fix-missing && \ 
+RUN apt-get -y update -qq --fix-missing && \ 
+    apt-get -y install --no-install-recommends software-properties-common && \
+    add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt-get -y remove software-properties-common && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    apt-get -y update -qq --fix-missing && \
     apt-get -y install --no-install-recommends \
         python${PYTHON_VERSION} \
         python${PYTHON_VERSION}-dev \
-        $( [ ${PYTHON_VERSION%%.*} -ge 3 ] && echo "python${PYTHON_VERSION%%.*}-distutils" ) \
+        $( [ ${PYTHON_VERSION%%.*} -ge 3 ] && echo "python${PYTHON_VERSION}-distutils" ) \
         wget \
         unzip \
         cmake \
