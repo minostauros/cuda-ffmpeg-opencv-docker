@@ -147,6 +147,7 @@ RUN apt-get -y update -qq --fix-missing && \
         libpostproc-dev \
         libeigen3-dev \
         libtbb-dev && \
+    apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /opencv /opencv_contrib /var/lib/apt/lists/* && \
 # Set the default python and install PIP packages
