@@ -153,7 +153,6 @@ RUN CUDA_PATH=(/usr/local/cuda-*) && \
         libeigen3-dev \
         libtbb-dev \
         zlib1g-dev && \
-    apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /opencv /opencv_contrib /var/lib/apt/lists/* && \
 # Set the default python and install PIP packages
