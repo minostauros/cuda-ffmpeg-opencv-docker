@@ -128,12 +128,9 @@ RUN CUDA_PATH=(/usr/local/cuda-*) && \
 # cleaning
    apt-get -y remove \
         unzip \
-        cmake \
         gfortran \
         apt-utils \
-        pkg-config \
         checkinstall \
-        build-essential \
         libatlas-base-dev \
         libgtk2.0-dev \
         libavcodec-dev \
@@ -151,8 +148,7 @@ RUN CUDA_PATH=(/usr/local/cuda-*) && \
         libglew-dev \
         libpostproc-dev \
         libeigen3-dev \
-        libtbb-dev \
-        zlib1g-dev && \
+        libtbb-dev && \
     apt-get clean && \
     rm -rf /opencv /opencv_contrib /var/lib/apt/lists/* && \
 # Set the default python and install PIP packages
