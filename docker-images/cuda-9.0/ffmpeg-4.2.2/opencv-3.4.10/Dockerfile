@@ -140,7 +140,6 @@ RUN apt-get -y update -qq --fix-missing && \
         libtiff5-dev \
         libdc1394-22-dev \
         libxine2-dev \
-        libv4l-dev \
         libgstreamer1.0-dev \
         libgstreamer-plugins-base1.0-dev \
         libglew-dev \
