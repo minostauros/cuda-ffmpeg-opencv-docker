@@ -6,29 +6,27 @@
 #
 # opencv docker - https://github.com/Valian/docker-python-opencv-ffmpeg and https://github.com/Borda/docker_python-opencv-ffmpeg/blob/master/gpu/Dockerfile
 
-FROM    tigerdockermediocore/cuda-ffmpeg-docker:4.2.2-cu90
+FROM    tigerdockermediocore/cuda-ffmpeg-docker:4.4-cu111
 
 WORKDIR    /
 
 # Install OpenCV
-ARG PYTHON_VERSION=3.7
-ARG OPENCV_VERSION=3.4.10
+ARG PYTHON_VERSION=3.9
+ARG OPENCV_VERSION=4.5.3
 
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
+# https://techoverflow.net/2019/05/18/how-to-fix-configuring-tzdata-interactive-input-when-building-docker-images/
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+ENV TZ=Asia/Seoul
 
 # Install all dependencies for OpenCV
 RUN apt-get -y update -qq --fix-missing && \
-    apt-get -y install --no-install-recommends software-properties-common && \
-    add-apt-repository -y ppa:deadsnakes/ppa && \
-    apt-get -y remove software-properties-common && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    apt-get -y update -qq --fix-missing && \
     apt-get -y install --no-install-recommends \
         python${PYTHON_VERSION} \
         python${PYTHON_VERSION}-dev \
-        $( [ ${PYTHON_VERSION%%.*} -ge 3 ] && echo "python${PYTHON_VERSION}-distutils" ) \
+        $( [ ${PYTHON_VERSION%%.*} -ge 3 ] && echo "python${PYTHON_VERSION%%.*}-distutils" ) \
         wget \
         unzip \
         cmake \
@@ -39,16 +37,22 @@ RUN apt-get -y update -qq --fix-missing && \
         checkinstall \
         qt5-default \
         build-essential \
+        libopenblas-base \
+        libopenblas-dev \
+        liblapack-dev \
         libatlas-base-dev \
-        libgtk2.0-dev \
+        #libgtk-3-dev \
+        #libavcodec58 \
         libavcodec-dev \
+        #libavformat58 \
         libavformat-dev \
         libavutil-dev \
+        #libswscale5 \
         libswscale-dev \
         libjpeg8-dev \
-        libpng-dev \
+        #libpng-dev \ # installed with ffmpeg in base image
         libtiff5-dev \
-        libdc1394-22 \
+        #libdc1394-22 \
         libdc1394-22-dev \
         libxine2-dev \
         libv4l-dev \
@@ -63,10 +67,11 @@ RUN apt-get -y update -qq --fix-missing && \
         zlib1g-dev \
         libsm6 \
         libxext6 \
-        libxrender1 && \
+        libxrender1 \
+    && \
 # install python dependencies
-    sysctl -w net.ipv4.ip_forward=1 && \
-    wget https://bootstrap.pypa.io/get-pip.py --progress=bar:force:noscroll && \
+    # sysctl -w net.ipv4.ip_forward=1 && \
+    wget https://bootstrap.pypa.io/get-pip.py --progress=bar:force:noscroll --no-check-certificate && \
     python${PYTHON_VERSION} get-pip.py && \
     rm get-pip.py && \
     pip${PYTHON_VERSION} install numpy && \
@@ -104,13 +109,15 @@ RUN apt-get -y update -qq --fix-missing && \
       -D WITH_QT=ON \
       -D WITH_OPENGL=ON \
       -D WITH_CUDA=ON \
+      -D WITH_LAPACK=ON \
+      #-D WITH_HPX=ON \
       -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda \
       -D CMAKE_LIBRARY_PATH=/usr/local/cuda/lib64/stubs \
       # https://kezunlin.me/post/6580691f
       # https://stackoverflow.com/questions/28010399/build-opencv-with-cuda-support
       # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
       # https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications
-      -D CUDA_ARCH_BIN="3.0 3.5 3.7 5.0 5.2 6.0 6.1 7.0" \
+      -D CUDA_ARCH_BIN="3.5 3.7 5.0 5.2 6.0 6.1 7.0 7.5 8.0 8.6" \
       -D CUDA_ARCH_PTX="" \
       -D WITH_CUBLAS=ON \
       -D WITH_NVCUVID=ON \
@@ -129,14 +136,16 @@ RUN apt-get -y update -qq --fix-missing && \
         gfortran \
         apt-utils \
         checkinstall \
+        libopenblas-dev \
+        liblapack-dev \
         libatlas-base-dev \
-        libgtk2.0-dev \
+        #libgtk-3-dev \
         libavcodec-dev \
         libavformat-dev \
         libavutil-dev \
         libswscale-dev \
         libjpeg8-dev \
-        libpng12-dev \
+        #libpng-dev \
         libtiff5-dev \
         libdc1394-22-dev \
         libxine2-dev \
@@ -145,7 +154,8 @@ RUN apt-get -y update -qq --fix-missing && \
         libglew-dev \
         libpostproc-dev \
         libeigen3-dev \
-        libtbb-dev && \
+        libtbb-dev \
+    && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /opencv /opencv_contrib /var/lib/apt/lists/* && \

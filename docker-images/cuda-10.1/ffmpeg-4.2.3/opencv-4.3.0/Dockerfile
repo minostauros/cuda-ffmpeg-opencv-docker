@@ -18,7 +18,7 @@ ARG OPENCV_VERSION=4.3.0
 SHELL ["/bin/bash", "-c"]
 
 # Install all dependencies for OpenCV
-RUN apt-get -y update -qq --fix-missing && \ 
+RUN apt-get -y update -qq --fix-missing && \
     apt-get -y install --no-install-recommends \
         python${PYTHON_VERSION} \
         python${PYTHON_VERSION}-dev \
