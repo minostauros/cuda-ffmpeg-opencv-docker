@@ -52,7 +52,7 @@ RUN apt-get -y update -qq --fix-missing && \
         libjpeg8-dev \
         #libpng-dev \ # installed with ffmpeg in base image
         libtiff5-dev \
-        #libdc1394-22 \
+        libdc1394-22 \
         libdc1394-22-dev \
         libxine2-dev \
         libv4l-dev \
@@ -146,7 +146,7 @@ RUN apt-get -y update -qq --fix-missing && \
         libswscale-dev \
         libjpeg8-dev \
         #libpng-dev \
-        libtiff5-dev \
+        #libtiff5-dev \
         libdc1394-22-dev \
         libxine2-dev \
         libgstreamer1.0-dev \
@@ -159,6 +159,8 @@ RUN apt-get -y update -qq --fix-missing && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /opencv /opencv_contrib /var/lib/apt/lists/* && \
+# https://stackoverflow.com/a/68897099 Qt5Core.so.5 error workaround (cause is not known, error does not occurs on every machine)
+    strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5 && \
 # Set the default python and install PIP packages
     update-alternatives --install /usr/bin/python${PYTHON_VERSION%%.*} python${PYTHON_VERSION%%.*} /usr/bin/python${PYTHON_VERSION} 1 && \
     update-alternatives --install /usr/bin/python python /usr/bin/python${PYTHON_VERSION} 1
