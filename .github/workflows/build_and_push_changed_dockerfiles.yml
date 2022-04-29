@@ -1,0 +1,89 @@
+name: Build all changed Dockerfiles
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**/Dockerfile'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '**/Dockerfile'
+
+jobs:
+  provide_changed_files:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # get all commits
+      - 
+        name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          separator: "', '"
+          since_last_remote_commit: 'true'
+          files: |
+            Dockerfile$
+      - 
+        name: Echo the changed files
+        id: changes
+        run: |
+          changed_list="['${{ steps.changed-files.outputs.all_modified_files }}']";
+          echo "::set-output name=matrix::$changed_list";
+    outputs:
+      matrix: ${{ steps.changes.outputs.matrix }}
+  docker:
+    runs-on: ubuntu-latest
+    needs: provide_changed_files
+    if: "join(fromJSON(needs.provide_changed_files.outputs.matrix), '') != ''" # preoceed only when we have something to build
+    strategy:
+      matrix: 
+        files: ${{fromJSON(needs.provide_changed_files.outputs.matrix)}}
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+#       -
+#         name: Set up QEMU
+#         uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - 
+        name: Get path and create tag
+        id: dockerfile
+        run: |
+          filepath=${{ matrix.files }};
+          echo "::set-output name=path::$filepath";
+          py_ver=$(echo $filepath | grep 'python-' | sed 's/.*\/python-\([0-9]*\)[\.]*\([0-9]*\)[^/]*.*Dockerfile/-py\1\2/');
+          tag=$(echo $filepath | sed 's/docker-images\/cuda-\([0-9]*\)[\.]*\([0-9]*\)[^/]*\/ffmpeg-\([0-9\.]*\)[^/]*\/opencv-\([0-9\.]*\)[^/]*.*Dockerfile/\4-cu\1\2/' | sed 's/\(.*\)\/Dockerfile/\1/' | sed 's/\//-/g');
+          echo "::set-output name=tag::${tag}${py_ver}";
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - 
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GIT_PACKAGES_TOKEN }}
+      -
+        name: Build and push Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ${{ steps.dockerfile.outputs.path }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ steps.dockerfile.outputs.tag }}  
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ steps.dockerfile.outputs.tag }}
