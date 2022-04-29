@@ -6,7 +6,7 @@
 #
 # opencv docker - https://github.com/Valian/docker-python-opencv-ffmpeg and https://github.com/Borda/docker_python-opencv-ffmpeg/blob/master/gpu/Dockerfile
 
-FROM    tigerdockermediocore/cuda-ffmpeg-docker:4.4-cu111
+FROM    ghcr.io/minostauros/cuda-ffmpeg-docker:4.4-cu111
 
 WORKDIR    /
 
