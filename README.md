@@ -1,6 +1,7 @@
 # cuda-ffmpeg-opencv-docker
-[![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/tigerdockermediocore/cuda-ffmpeg-opencv-docker)](https://hub.docker.com/r/tigerdockermediocore/cuda-ffmpeg-opencv-docker)
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/tigerdockermediocore/cuda-ffmpeg-opencv-docker)](https://hub.docker.com/r/tigerdockermediocore/cuda-ffmpeg-opencv-docker)
+[![Build all changed Dockerfiles](https://github.com/minostauros/cuda-ffmpeg-opencv-docker/actions/workflows/build_and_push_changed_dockerfiles.yml/badge.svg)](https://github.com/minostauros/cuda-ffmpeg-opencv-docker/actions/workflows/build_and_push_changed_dockerfiles.yml)
+[![Manually build on Github Actions](https://github.com/minostauros/cuda-ffmpeg-opencv-docker/actions/workflows/manual_build.yml/badge.svg)](https://github.com/minostauros/cuda-ffmpeg-opencv-docker/actions/workflows/manual_build.yml)
 
 OpenCV docker with CUDA and FFMPEG support as devel image.
 The base images are from NVIDIA NGC (nvcr.io) to support server-level GPUs.
