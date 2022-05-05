@@ -137,7 +137,6 @@ RUN apt-get -y update -qq --fix-missing && \
         libtiff5-dev \
         libdc1394-22-dev \
         libxine2-dev \
-        libv4l-dev \
         libgstreamer1.0-dev \
         libgstreamer-plugins-base1.0-dev \
         libglew-dev \
@@ -152,5 +151,6 @@ RUN apt-get -y update -qq --fix-missing && \
     update-alternatives --install /usr/bin/python python /usr/bin/python${PYTHON_VERSION} 1
 
 CMD  ["/bin/bash"]
-ENV  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+ENV  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib" \
+     PYTHONPATH="$PYTHONPATH:/usr/local/lib/python${PYTHON_VERSION}/site-packages"
 WORKDIR /workspace
