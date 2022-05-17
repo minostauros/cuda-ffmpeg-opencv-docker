@@ -13,6 +13,8 @@ WORKDIR    /
 # Install OpenCV
 ARG PYTHON_VERSION=3.9
 ARG OPENCV_VERSION=4.5.5
+# NUMPY 1.22.x compatibility issue with OpenCV 4.5.x: https://github.com/numpy/numpy/issues/20895
+ARG NUMPY_VERSION=1.21.6
 
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
@@ -74,7 +76,7 @@ RUN apt-get -y update -qq --fix-missing && \
     wget https://bootstrap.pypa.io/get-pip.py --progress=bar:force:noscroll --no-check-certificate && \
     python${PYTHON_VERSION} get-pip.py && \
     rm get-pip.py && \
-    pip${PYTHON_VERSION} install numpy && \
+    pip${PYTHON_VERSION} install numpy==${NUMPY_VERSION} && \
 # Get OpenCV
     wget https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip -O opencv.zip --progress=bar:force:noscroll && \
     unzip -q opencv.zip && \
