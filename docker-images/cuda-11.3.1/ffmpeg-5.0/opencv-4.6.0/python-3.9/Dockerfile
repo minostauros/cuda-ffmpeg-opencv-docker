@@ -13,8 +13,8 @@ WORKDIR    /
 # Install OpenCV
 ARG PYTHON_VERSION=3.9
 ARG OPENCV_VERSION=4.6.0
-# NUMPY 1.22.x compatibility issue with OpenCV 4.5.x: https://github.com/numpy/numpy/issues/20895
-ARG NUMPY_VERSION=1.23.1
+# NUMPY 1.22.x/1.23.x compatibility issue with OpenCV 4.5.x/4.6.x: https://github.com/numpy/numpy/issues/20895
+ARG NUMPY_VERSION=1.21.6
 
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
