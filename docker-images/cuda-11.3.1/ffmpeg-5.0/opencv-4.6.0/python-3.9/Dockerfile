@@ -13,8 +13,8 @@ WORKDIR    /
 # Install OpenCV
 ARG PYTHON_VERSION=3.9
 ARG OPENCV_VERSION=4.6.0
-# NUMPY 1.22.x/1.23.x compatibility issue with OpenCV 4.5.x/4.6.x: https://github.com/numpy/numpy/issues/20895
-ARG NUMPY_VERSION=1.21.6
+# caution: NUMPY 1.22.x/1.23.x compatibility issue with OpenCV 4.5.x/4.6.x when fast math is enabled: https://github.com/numpy/numpy/issues/20895
+ARG NUMPY_VERSION=1.23.1
 
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
@@ -123,8 +123,8 @@ RUN apt-get -y update -qq --fix-missing && \
       -D CUDA_ARCH_PTX="" \
       -D WITH_CUBLAS=ON \
       -D WITH_NVCUVID=ON \
-      -D ENABLE_FAST_MATH=1 \
-      -D CUDA_FAST_MATH=1 \
+      -D ENABLE_FAST_MATH=0 \
+      -D CUDA_FAST_MATH=0 \
       -D ENABLE_PRECOMPILED_HEADERS=OFF \
       .. && \
 # Build, Test and Install
