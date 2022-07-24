@@ -111,8 +111,8 @@ RUN apt-get -y update -qq --fix-missing && \
       -D CUDA_ARCH_PTX="" \
       -D WITH_CUBLAS=ON \
       -D WITH_NVCUVID=ON \
-      -D ENABLE_FAST_MATH=1 \
-      -D CUDA_FAST_MATH=1 \
+      -D ENABLE_FAST_MATH=0 \
+      -D CUDA_FAST_MATH=0 \
       -D ENABLE_PRECOMPILED_HEADERS=OFF \
       .. && \
 # Build, Test and Install
