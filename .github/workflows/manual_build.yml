@@ -15,13 +15,13 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 #       -
 #         name: Set up QEMU
-#         uses: docker/setup-qemu-action@v1
+#         uses: docker/setup-qemu-action@v2
       -
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - 
         name: Get path and create tag
         id: dockerfile
@@ -33,20 +33,20 @@ jobs:
           echo "::set-output name=tag::${tag}${py_ver}";
       -
         name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GIT_PACKAGES_TOKEN }}
       -
         name: Build and push Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: ${{ steps.dockerfile.outputs.path }}

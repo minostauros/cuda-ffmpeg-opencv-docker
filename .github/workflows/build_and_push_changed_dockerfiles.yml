@@ -18,19 +18,19 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # get all commits
-      - 
+      -
         name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v1.2.0
+        uses: tj-actions/changed-files@v32
         with:
           separator: "', '"
           since_last_remote_commit: 'true'
           files: |
             Dockerfile$
-      - 
+      -
         name: Echo the changed files
         id: changes
         run: |
@@ -43,19 +43,19 @@ jobs:
     needs: provide_changed_files
     if: "join(fromJSON(needs.provide_changed_files.outputs.matrix), '') != ''" # preoceed only when we have something to build
     strategy:
-      matrix: 
+      matrix:
         files: ${{fromJSON(needs.provide_changed_files.outputs.matrix)}}
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 #       -
 #         name: Set up QEMU
 #         uses: docker/setup-qemu-action@v1
       -
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - 
+        uses: docker/setup-buildx-action@v2
+      -
         name: Get path and create tag
         id: dockerfile
         run: |
@@ -66,24 +66,24 @@ jobs:
           echo "::set-output name=tag::${tag}${py_ver}";
       -
         name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - 
+      -
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GIT_PACKAGES_TOKEN }}
       -
         name: Build and push Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: ${{ steps.dockerfile.outputs.path }}
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ steps.dockerfile.outputs.tag }}  
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:${{ steps.dockerfile.outputs.tag }}
             ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ steps.dockerfile.outputs.tag }}
