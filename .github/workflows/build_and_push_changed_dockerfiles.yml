@@ -27,9 +27,9 @@ jobs:
         uses: tj-actions/changed-files@v34
         with:
           separator: "', '"
-          since_last_remote_commit: 'true'
+          since_last_remote_commit: "true"
           files: |
-            Dockerfile$
+            **/Dockerfile
       -
         name: Echo the changed files
         id: changes

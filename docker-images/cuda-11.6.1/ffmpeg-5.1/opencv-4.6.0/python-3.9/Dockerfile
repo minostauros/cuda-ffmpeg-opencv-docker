@@ -8,7 +8,7 @@
 
 FROM    ghcr.io/minostauros/cuda-ffmpeg-docker:5.1-cu116
 
-WORKDIR    /
+WORKDIR /
 
 # Install OpenCV
 ARG PYTHON_VERSION=3.9
