@@ -24,7 +24,7 @@ jobs:
       -
         name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v32
+        uses: tj-actions/changed-files@v34
         with:
           separator: "', '"
           since_last_remote_commit: 'true'
@@ -35,7 +35,7 @@ jobs:
         id: changes
         run: |
           changed_list="['${{ steps.changed-files.outputs.all_modified_files }}']";
-          echo "::set-output name=matrix::$changed_list";
+          echo "matrix=$changed_list" >> $GITHUB_OUTPUT;
     outputs:
       matrix: ${{ steps.changes.outputs.matrix }}
   docker:
@@ -60,10 +60,10 @@ jobs:
         id: dockerfile
         run: |
           filepath=${{ matrix.files }};
-          echo "::set-output name=path::$filepath";
+          echo "path=$filepath" >> $GITHUB_OUTPUT;
           py_ver=$(echo $filepath | grep 'python-' | sed 's/.*\/python-\([0-9]*\)[\.]*\([0-9]*\)[^/]*.*Dockerfile/-py\1\2/');
           tag=$(echo $filepath | sed 's/docker-images\/cuda-\([0-9]*\)[\.]*\([0-9]*\)[^/]*\/ffmpeg-\([0-9\.]*\)[^/]*\/opencv-\([0-9\.]*\)[^/]*.*Dockerfile/\4-cu\1\2/' | sed 's/\(.*\)\/Dockerfile/\1/' | sed 's/\//-/g');
-          echo "::set-output name=tag::${tag}${py_ver}";
+          echo "tag=${tag}${py_ver}" >> $GITHUB_OUTPUT;
       -
         name: Login to DockerHub
         uses: docker/login-action@v2
