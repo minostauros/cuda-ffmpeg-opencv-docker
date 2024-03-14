@@ -18,13 +18,13 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # get all commits
       -
         name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v34
+        uses: tj-actions/changed-files@v43
         with:
           separator: "', '"
           since_last_remote_commit: "true"
@@ -48,13 +48,13 @@ jobs:
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 #       -
 #         name: Set up QEMU
-#         uses: docker/setup-qemu-action@v1
+#         uses: docker/setup-qemu-action@v3
       -
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       -
         name: Get path and create tag
         id: dockerfile
