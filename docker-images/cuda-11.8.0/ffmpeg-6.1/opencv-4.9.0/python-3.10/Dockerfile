@@ -146,7 +146,6 @@ RUN apt-get -y update -qq --fix-missing && \
         libjpeg8-dev \
         #libpng-dev \
         #libtiff5-dev \
-        libdc1394-22-dev \
         libxine2-dev \
         libgstreamer1.0-dev \
         libgstreamer-plugins-base1.0-dev \
@@ -166,5 +165,5 @@ RUN apt-get -y update -qq --fix-missing && \
 
 CMD  ["/bin/bash"]
 ENV  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib" \
-     PYTHONPATH="$PYTHONPATH:/usr/local/lib/python${PYTHON_VERSION}/site-packages"
+     PYTHONPATH="$PYTHONPATH:/usr/lib/python${PYTHON_VERSION}/site-packages:/usr/local/lib/python${PYTHON_VERSION}/site-packages"
 WORKDIR /workspace
