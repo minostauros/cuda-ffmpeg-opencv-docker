@@ -47,6 +47,21 @@ jobs:
         files: ${{fromJSON(needs.provide_changed_files.outputs.matrix)}}
     steps:
       -
+        name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: false
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+      -
         name: Checkout
         uses: actions/checkout@v4
 #       -
