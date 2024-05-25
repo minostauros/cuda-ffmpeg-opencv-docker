@@ -67,6 +67,7 @@ RUN apt-get -y update -qq --fix-missing && \
         libsm6 \
         libxext6 \
         libxrender1 \
+        ninja-build \
     && \
 # install python dependencies
     # sysctl -w net.ipv4.ip_forward=1 && \
@@ -87,6 +88,7 @@ RUN apt-get -y update -qq --fix-missing && \
     mkdir /opencv/build && \
     cd /opencv/build && \
     cmake \
+      -GNinja \
       -D CMAKE_BUILD_TYPE=RELEASE \
       -D BUILD_PYTHON_SUPPORT=ON \
       -D BUILD_DOCS=ON \
@@ -126,8 +128,8 @@ RUN apt-get -y update -qq --fix-missing && \
       .. && \
 # Build, Test and Install
     cd /opencv/build && \
-    make -j$(nproc) && \
-    make install && \
+    ninja && \
+    ninja install && \
     ldconfig && \
 # cleaning
    apt-get -y remove \
